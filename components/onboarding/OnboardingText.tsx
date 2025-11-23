@@ -1,4 +1,4 @@
-import { OnboardingStep } from "@/app/onboarding/onboarding-data";
+import { OnboardingStep } from "@/constants/onboarding-data";
 import { ThemedText } from "@/components/ui/ThemedText";
 import React from "react";
 import { StyleSheet } from "react-native";
@@ -6,14 +6,13 @@ import Animated, { FadeIn, FadeOut, LinearTransition } from "react-native-reanim
 
 interface OnboardingTextProps {
    step: OnboardingStep;
-   key: number;
 }
 
-export function OnboardingText({ step, key }: OnboardingTextProps) {
+export function OnboardingText({ step }: OnboardingTextProps) {
    return (
       <Animated.View
          style={styles.container}
-         key={key}
+         key={step.id}
          entering={FadeIn.duration(600)}
          exiting={FadeOut.duration(400)}
          layout={LinearTransition.springify()}

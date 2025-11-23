@@ -2,7 +2,7 @@ import { OnboardingText } from "@/components/onboarding/OnboardingText";
 import { ProgressRing } from "@/components/onboarding/ProgressRing";
 import { ThemedText } from "@/components/ui/ThemedText";
 import Colors from "@/constants/Colors";
-import { useRouter } from "expo-router";
+import { onboardingSteps } from "@/constants/onboarding-data";
 import React, { useState } from "react";
 import {
    Image,
@@ -13,12 +13,13 @@ import {
 } from "react-native";
 import Animated, { FadeIn, LinearTransition } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { onboardingSteps } from "./onboarding-data";
+import { useAuth } from "../context/AuthContext";
 
 export default function OnboardingScreen() {
    const colorScheme = useColorScheme();
    const colors = Colors[colorScheme ?? "light"];
-   const router = useRouter();
+
+   const { completeOnboarding } = useAuth();
 
    const [currentStep, setCurrentStep] = useState(0);
    const totalSteps = onboardingSteps.length;
@@ -28,7 +29,7 @@ export default function OnboardingScreen() {
          setCurrentStep(currentStep + 1);
       } else {
          // Onboarding complete - navigate to main app
-         router.replace("/onboarding");
+         completeOnboarding();
       }
    };
 
@@ -44,7 +45,7 @@ export default function OnboardingScreen() {
             entering={FadeIn.duration(800)}
          >
             <Image
-               source={require("@/assets/images/logo.png")}
+               source={require("@/assets/images/logohor.png")}
                style={styles.logo}
                resizeMode="contain"
             />
@@ -52,10 +53,7 @@ export default function OnboardingScreen() {
 
          {/* Text Content */}
          <View style={styles.textContainer}>
-            <OnboardingText
-               step={onboardingSteps[currentStep]}
-               key={currentStep}
-            />
+            <OnboardingText step={onboardingSteps[currentStep]} />
          </View>
 
          {/* Progress Ring with Arrow */}
@@ -72,9 +70,7 @@ export default function OnboardingScreen() {
 
                {/* Arrow inside the ring */}
                <View style={styles.arrowContainer}>
-                  <ThemedText
-                     style={[styles.arrow, { color: colors.background }]}
-                  >
+                  <ThemedText style={[styles.arrow, { color: colors.h1text }]}>
                      →
                   </ThemedText>
                </View>

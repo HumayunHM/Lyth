@@ -2,17 +2,24 @@ import Colors from "@/constants/Colors";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { ActivityIndicator, useColorScheme, View } from "react-native";
+import { useAuth } from "./context/AuthContext";
 
 export default function Index() {
    const router = useRouter();
    const colorScheme = useColorScheme();
    const colors = Colors[colorScheme ?? "light"];
+   const { hasCompletedOnboarding, isAuthenticated } = useAuth();
 
    useEffect(() => {
-      // For now, always redirect to onboarding
-      // Later you can add logic to check if user has completed onboarding
-      router.replace("/onboarding");
-   }, []);
+      // Check auth state and redirect accordingly
+      if (!hasCompletedOnboarding) {
+         router.replace("/onboarding");
+      } else if (!isAuthenticated) {
+         router.replace("/(auth)/sign-up");
+      } else {
+         router.replace("/(app)/(tabs)/home");
+      }
+   }, [hasCompletedOnboarding, isAuthenticated]);
 
    return (
       <View
